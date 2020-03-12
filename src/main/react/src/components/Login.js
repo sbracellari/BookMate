@@ -107,15 +107,19 @@ class Login extends Component {
                   <form className={classes.text} noValidate autoComplete="off">
                     <div className={classes.top}>
                       <div className={classes.icon}><PersonOutlinedIcon /></div> 
-                      <TextField placeholder="username" />
+                      <TextField placeholder="first name" />
                     </div>
-                   <div className={classes.top}>
-                     <div className={classes.icon}><LockOutlinedIcon /></div> 
-                     <TextField placeholder="password" />
-                   </div>
-                   <div className={classes.bottom}>
-                     <div className={classes.icon}><MailOutlinedIcon /></div> 
-                     <TextField placeholder="email" />
+                    <div className={classes.top}>
+                      <div className={classes.icon}><PersonOutlinedIcon /></div> 
+                      <TextField placeholder="last name" />
+                    </div>
+                    <div className={classes.top}>
+                      <div className={classes.icon}><MailOutlinedIcon /></div> 
+                      <TextField placeholder="email" />
+                    </div>
+                    <div className={classes.bottom}>
+                      <div className={classes.icon}><LockOutlinedIcon /></div> 
+                      <TextField placeholder="password" />
                     </div>
                   </form> 
                 </div>

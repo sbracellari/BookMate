@@ -59,6 +59,7 @@ class Home extends Component {
               <Button className={classes.btn}>SELL</Button>
               <Button className={classes.btn}>TRADE</Button>
               <Button className={classes.btn}>BID</Button>
+              <Button className={classes.btn}>MY LISTINGS</Button>
               <Button className={classes.btn}>LOG OUT</Button>
             </div>
           </div>
