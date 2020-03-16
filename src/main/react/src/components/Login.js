@@ -9,12 +9,17 @@ import Tabs from '@material-ui/core/Tabs'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
 const styles = () => ({
   bottom: {
     display: 'flex'
   },
   btn: {
+    textTransform: 'none'
+  },
+  btns: {
+    float: 'right',
     textTransform: 'none'
   },
   container: {
@@ -88,42 +93,6 @@ class Login extends Component {
           </div>
           <div className={classes.container}>
             <div>
-              <TabPanel value={value} index={0}>
-                <div>
-                  <form className={classes.text} noValidate autoComplete="off">
-                    <div className={classes.top}>
-                      <div className={classes.icon}><MailOutlinedIcon /></div> 
-                      <TextField placeholder="email" />
-                    </div>
-                    <div className={classes.bottom}>
-                      <div className={classes.icon}><LockOutlinedIcon /></div> 
-                      <TextField placeholder="password" />
-                    </div>
-                  </form> 
-                </div>
-              </TabPanel>
-              <TabPanel value={value} index={1}>
-                <div>
-                  <form className={classes.text} noValidate autoComplete="off">
-                    <div className={classes.top}>
-                      <div className={classes.icon}><PersonOutlinedIcon /></div> 
-                      <TextField placeholder="first name" />
-                    </div>
-                    <div className={classes.top}>
-                      <div className={classes.icon}><PersonOutlinedIcon /></div> 
-                      <TextField placeholder="last name" />
-                    </div>
-                    <div className={classes.top}>
-                      <div className={classes.icon}><MailOutlinedIcon /></div> 
-                      <TextField placeholder="email" />
-                    </div>
-                    <div className={classes.bottom}>
-                      <div className={classes.icon}><LockOutlinedIcon /></div> 
-                      <TextField placeholder="password" />
-                    </div>
-                  </form> 
-                </div>
-              </TabPanel>
               <Tabs
                 centered="true"
                 classes={{
@@ -143,9 +112,51 @@ class Login extends Component {
                   classes={{
                     root: classes.btn
                   }}
-                  label="sign up" 
+                  label="register" 
                  />
               </Tabs>
+              <TabPanel value={value} index={0}>
+                <div>
+                  <form className={classes.text} noValidate autoComplete="off">
+                    <div className={classes.top}>
+                      <div className={classes.icon}><MailOutlinedIcon /></div> 
+                      <TextField placeholder="email" />
+                    </div>
+                    <div className={classes.bottom}>
+                      <div className={classes.icon}><LockOutlinedIcon /></div> 
+                      <TextField type="password" placeholder="password" />
+                    </div>
+                  </form> 
+                  <Button className={classes.btns}>
+                    login
+                  </Button>
+                </div>
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                <div>
+                  <form className={classes.text} noValidate autoComplete="off">
+                    <div className={classes.top}>
+                      <div className={classes.icon}><PersonOutlinedIcon /></div> 
+                      <TextField placeholder="first name" />
+                    </div>
+                    <div className={classes.top}>
+                      <div className={classes.icon}><PersonOutlinedIcon /></div> 
+                      <TextField placeholder="last name" />
+                    </div>
+                    <div className={classes.top}>
+                      <div className={classes.icon}><MailOutlinedIcon /></div> 
+                      <TextField placeholder="email" />
+                    </div>
+                    <div className={classes.bottom}>
+                      <div className={classes.icon}><LockOutlinedIcon /></div> 
+                      <TextField type="password" placeholder="password" />
+                    </div>
+                  </form> 
+                  <Button className={classes.btns}>
+                    register
+                  </Button>
+                </div>
+              </TabPanel>
             </div>
           </div>
           </div>

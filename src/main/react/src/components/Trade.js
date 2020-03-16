@@ -148,9 +148,6 @@ class Trade extends Component {
                     <Typography gutterBottom component="h2">
                       {trades.listed_book.title}
                     </Typography>
-                    <Typography className={classes.typography} component="p">
-                      ${trades.price}
-                    </Typography>
                   </CardContent>
                   <CardActions className={classes.action}>
                     <Button 
@@ -180,12 +177,6 @@ class Trade extends Component {
                         className={classes.desc}
                       >
                         {trades.listed_book.desc}
-                      </Typography>
-                      <Typography 
-                        className={classes.price} 
-                        component="p"
-                      >
-                        ${trades.price}
                       </Typography>
                       <Typography>
                         Listed by {trades.lister.first_name} {trades.lister.last_name} {" "}

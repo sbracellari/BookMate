@@ -11,13 +11,14 @@ import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 
-import { get_books } from './api/api'
+import { get_transactions, get_listings } from './api/api'
 
 import Login from './components/Login'
 import Home from './components/Home'
 import Purchase from './components/Purchase'
 import Trade from './components/Trade'
 import Auction from './components/Auction'
+import Listings from './components/Listings'
 import Appbar from './components/Appbar'
 
 const styles = () => ({
@@ -46,7 +47,10 @@ class App extends Component {
     value: 0,
     purchases: [],
     trades: [],
-    auctions: []
+    auctions: [],
+    listed_purchases: [],
+    listed_auctions: [],
+    listed_trades: []
   }
 
   handleChange = (event, value) => {
@@ -54,13 +58,22 @@ class App extends Component {
   }
 
   componentDidMount() {
-    get_books(true).then(books => {
+    get_transactions(true).then(books => {
       this.setState({
         purchases: books.transactions[0].purchases,
         trades: books.transactions[1].trades,
         auctions: books.transactions[2].auctions
       })
     })
+
+    get_listings(true).then(listings => {
+      this.setState({
+        listed_purchases: listings.transactions[0].purchases,
+        listed_trades: listings.transactions[1].trades,
+        listed_auctions: listings.transactions[2].auctions
+      })
+    })
+
   }
 
   render () {
@@ -69,7 +82,10 @@ class App extends Component {
       value,
       trades,
       purchases,
-      auctions
+      auctions,
+      listed_auctions,
+      listed_trades,
+      listed_purchases
     } = this.state
   
     return (
@@ -112,6 +128,16 @@ class App extends Component {
             () =>
               <Auction
                 auctions={auctions}
+              />
+            } 
+          />
+        <Route path="/my-listings" 
+          component={
+            () =>
+              <Listings
+                listed_auctions={listed_auctions}
+                listed_trades={listed_trades}
+                listed_purchases={listed_purchases}
               />
             } 
           />

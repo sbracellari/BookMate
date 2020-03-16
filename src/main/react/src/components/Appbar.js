@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Toolbar from '@material-ui/core/Toolbar'
+import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
@@ -26,9 +27,14 @@ const styles = () => ({
     color: 'black',
     fontFamily: 'Special Elite',
     fontSize: 25,
-    margin: '10px 0px 0px 15px',
-    padding: 10
+    padding: '15px 10px 10px 10px'
  },
+ home: {
+    "&:hover": {
+      backgroundColor: "transparent"
+    },
+    textTransform: 'none'
+  },
  toolbar: {
    marginTop: 5
  }
@@ -44,16 +50,51 @@ class Appbar extends Component {
         position="static" 
       >
         <div className={classes.display}>
-          <Typography className={classes.header}>
-            BookMate
-          </Typography>
+          <Button 
+            className={classes.home}
+            component={Link}
+            to="/"
+          >
+            <Typography className={classes.header}>
+              BookMate
+            </Typography>
+          </Button>
           <Toolbar className={classes.toolbar}>
-            <Button className={classes.btn}>BUY</Button>
-            <Button className={classes.btn}>SELL</Button>
-            <Button className={classes.btn}>TRADE</Button>
-            <Button className={classes.btn}>BID</Button>
-            <Button className={classes.btn}>MY LISTINGS</Button>
-            <Button className={classes.btn}>LOG OUT</Button>
+            <Button 
+              className={classes.btn}
+              component={Link}
+              to="/purchase"
+            >
+              BUY
+            </Button>
+            <Button 
+              className={classes.btn}
+              component={Link}
+              to="/trade"
+            >
+              TRADE
+            </Button>
+            <Button 
+              className={classes.btn}
+              component={Link}
+              to="/auction"
+            >
+              BID
+            </Button>
+            <Button 
+              className={classes.btn}
+              component={Link}
+              to="/my-listings"
+            >
+              MY LISTINGS
+            </Button>
+            <Button 
+              className={classes.btn}    
+              component={Link}
+              to="/login"          
+            >
+              LOG OUT
+            </Button>
           </Toolbar>
         </div>
       </AppBar>

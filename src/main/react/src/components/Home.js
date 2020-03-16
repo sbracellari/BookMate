@@ -3,12 +3,18 @@ import React, { Component } from 'react'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
   btn: {
     maxWidth: 100,
-    marginLeft: 20
+    marginLeft: 20,
+    textAlign: 'center'
+  },
+  btns: {
+    display: 'flex',
+    flexDirection: 'column'
   },
   content: {
     marginTop: 200
@@ -54,13 +60,42 @@ class Home extends Component {
             <div>
               <Typography className={classes.header}>BookMate</Typography>
             </div>
-            <div style={{display: 'flex', flexDirection: 'column'}}>
-              <Button className={classes.btn}>BUY</Button>
-              <Button className={classes.btn}>SELL</Button>
-              <Button className={classes.btn}>TRADE</Button>
-              <Button className={classes.btn}>BID</Button>
-              <Button className={classes.btn}>MY LISTINGS</Button>
-              <Button className={classes.btn}>LOG OUT</Button>
+            <div className={classes.btns}>
+              <Button 
+                className={classes.btn}
+                component={Link}
+                to="/purchase"
+              >
+                BUY
+              </Button>
+              <Button 
+                className={classes.btn}
+                component={Link}
+                to="/trade"
+              >
+                TRADE
+              </Button>
+              <Button 
+                className={classes.btn}
+                component={Link}
+                to="/auction"
+              >
+                BID
+              </Button>
+              <Button 
+                className={classes.btn}
+                component={Link}
+                to="/my-listings"
+              >
+                MY LISTINGS
+              </Button>
+              <Button 
+                className={classes.btn}   
+                component={Link}
+                to="/login"           
+              >
+                LOG OUT
+              </Button>
             </div>
           </div>
         </Paper>
