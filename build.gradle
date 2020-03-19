@@ -10,6 +10,7 @@ plugins {
 
 repositories {
   mavenCentral()
+  mavenLocal()
 }
 
 // node {
@@ -66,7 +67,8 @@ war {
 // copyTask.finalizedBy 'spotlessApply'
 
 dependencies {
-	  implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'edu.oakland:soffit-auth:1.0.0.RC'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
