@@ -8,8 +8,10 @@ public class Transaction {
   private List<Trade> trades;
   private List<Purchase> purchases;
   private List<Auction> auctions;
-  private Student lister;
-  private Student recipient;
-//   private String location;
-  private Book listedBook;
+
+public Transaction(List<Trade> trade,List<Purchase> purchase, List<Auction> auction ){
+    this.trades = trade;
+    this.purchases = purchase;
+    this.auctions = auction;
+    }
 }

@@ -9,14 +9,16 @@ public class Book {
   private String title;
   private String author;
   private String ISBN;
+  private String description;
+  private int ID;
 
-  public Book() {}
-
-  public Book(String genre, String title, String author, String ISBN) {
+  public Book(String genre, String title, String author, String ISBN, String description, int ID {
     this.genre = genre;
     this.title = title;
     this.author = author;
     this.ISBN = ISBN;
+    this.description = description;
+    this.ID = ID;
   }
 
   public static RowMapper<Book> mapper =
@@ -26,7 +28,9 @@ public class Book {
           rs.getString("genre"),
           rs.getString("title"),
           rs.getString("author"),
-          rs.getString("ISBN")
+          rs.getString("ISBN"),
+          rs.getString("description"),
+          rs.getString("ID")
         );
       return book;
     };

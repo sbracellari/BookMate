@@ -7,17 +7,14 @@ import org.springframework.jdbc.core.RowMapper;
 public class Student {
   private String firstName;
   private String lastName;
-//   private String GID;
-  private String username;
   private String email;
+  private String password;
 
-  public Student() {}
-
-  public Student(String firstName, String lastName, String username, String email) {
+  public Student(String firstName, String lastName, String email, String password) {
     this.firstName = firstName;
     this.lastName = lastName;
-    this.username = username;
     this.email = email;
+    this.password = password;
   }
 
   public static RowMapper<Student> mapper =
@@ -26,8 +23,8 @@ public class Student {
         new Student(
           rs.getString("firstName"),
           rs.getString("lastName"),
-          rs.getString("username"),
-          rs.getString("email")
+          rs.getString("email"),
+          rs.getString("password")
         );
       return student;
     };
