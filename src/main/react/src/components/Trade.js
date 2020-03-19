@@ -52,7 +52,7 @@ const styles = () => ({
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     height: '100vh',
-    margin: -10,
+    margin: "-10px -35px -10px -10px",
     overflow: 'scroll'
   },
   list: {

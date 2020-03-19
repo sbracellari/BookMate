@@ -555,3 +555,9 @@ export const get_listings = async is_demo => {
     return err
   }
 }
+
+// POST book-buying-site/account
+// BODY: {
+// "username": "jfghfsjgw",
+// "password": "fgslwtaashs"
+// }
