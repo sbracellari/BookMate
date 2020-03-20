@@ -2,46 +2,48 @@ package edu.project.bookmate.model;
 
 import java.sql.Timestamp;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import org.springframework.jdbc.core.RowMapper;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class Auction {
   private int ID;
   private Timestamp start;
   private Timestamp end;
   private double initialBid;
   private double currentBid; 
-  private int bookID;
-  private String listerEmail;
-  private String recipientEmail; 
-
-  public Auction(int ID, Timestamp startTime, Timestamp endTime, double initialBid, double currentBid, int bookID, String listerEmail, String recipientEmail) {
-    this.ID = ID;
-    this.start = startTime;
-    this.end = endTime;
-    this.initialBid = initialBid;
-    this.currentBid = currentBid;
-    this.bookID = bookID;
-    this.listerEmail = listerEmail;
-    this.recipientEmail = recipientEmail;
-  }
+  private Book book;
+  private Student lister;
+  private Student recipient; 
 
   public static RowMapper<Auction> mapper =
     (rs, rowNum) -> {
-      Auction auction =
-        new Auction(
-          rs.getTimestamp("start"),
-          rs.getTimestamp("end"),
-          rs.getDouble("initialBid"),
-          rs.getDouble("currentBid"),
-          rs.getInt("id"),
-          rs.getInt("bookID"),
-          rs.getString("listerEmail"),
-          rs.getString("recipientEmail")
+      Auction auction = new Auction();
+        auction.setID(rs.getInt("id"));
+        auction.setStart(rs.getTimestamp("start"));
+        auction.setEnd(rs.getTimestamp("end"));
+        auction.setInitialBid(rs.getDouble("initialBid"));
+        auction.setCurrentBid(rs.getDouble("currentBid"));
+        auction.setBook(
+          new Book(
+            rs.getInt("id"),
+            rs.getString("genre"),
+            rs.getString("title"),
+            rs.getString("author"),
+            rs.getString("isbn"),
+            rs.getString("description"))
+        );
+        auction.setLister(
+          new Student(
+            rs.getString("lister_first_name"), 
+            rs.getString("lister_last_name"), 
+            rs.getString("lister_email"))
+        );
+        auction.setRecipient(
+          new Student(
+            rs.getString("recipient_first_name"), 
+            rs.getString("recipient_last_name"), 
+            rs.getString("recipient_email"))
         );
       return auction;
-    };
+  };
 }

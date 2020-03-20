@@ -1,37 +1,43 @@
 package edu.project.bookmate.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import org.springframework.jdbc.core.RowMapper;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class Purchase{
   private int ID;
   private double price;
-  private int bookID;
-  private String listerEmail;
-  private String recipientEmail;
+  private Book book;
+  private Student lister;
+  private Student recipient;
 
-  public Purchase(int ID, double price, int bookID, String listerEmail, String recipientEmail) {
-    this.ID = ID;
-    this.price = price;
-    this.bookID = bookID;
-    this.listerEmail = listerEmail;
-    this.recipientEmail = recipientEmail;
-  }
-
-  public static RowMapper<Purchase> mapper = 
+  public static RowMapper<Purchase> mapper =
     (rs, rowNum) -> {
-      Purchase purchase = 
-        new Purchase(
-          rs.getint("ID"),
-          rs.getDouble("price"),
-          rs.getint("bookID"),
-          rs.getString("listerEmail"),
-          rs.getString("recipientEmail")
+     Purchase purchase = new Purchase();
+        purchase.setID(rs.getInt("id"));
+        purchase.setPrice(rs.getDouble("price"));
+        purchase.setBook(
+          new Book(
+            rs.getInt("id"),
+            rs.getString("genre"),
+            rs.getString("title"),
+            rs.getString("author"),
+            rs.getString("isbn"),
+            rs.getString("description"))
+        );
+        purchase.setLister(
+          new Student(
+            rs.getString("lister_first_name"), 
+            rs.getString("lister_last_name"), 
+            rs.getString("lister_email"))
+        );
+        purchase.setRecipient(
+          new Student(
+            rs.getString("recipient_first_name"), 
+            rs.getString("recipient_last_name"), 
+            rs.getString("recipient_email"))
         );
       return purchase;
-    };
+  };
 }

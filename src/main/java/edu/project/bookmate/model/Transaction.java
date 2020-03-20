@@ -9,9 +9,9 @@ public class Transaction {
   private List<Purchase> purchases;
   private List<Auction> auctions;
 
-public Transaction(List<Trade> trade,List<Purchase> purchase, List<Auction> auction ){
-    this.trades = trade;
-    this.purchases = purchase;
-    this.auctions = auction;
-    }
+  public Transaction(List<Trade> trades, List<Purchase> purchases, List<Auction> auctions) {
+    this.trades = trades;
+    this.purchases = purchases;
+    this.auctions = auctions;
+  }
 }

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/Bookmate/v1")
+@RequestMapping("/bookmate/v1")
 public class BookMateController {
   protected final Logger log = LoggerFactory.getLogger("bookmate");
   //@Autowired private BookMateDB service; // instantiate an instance of the service class

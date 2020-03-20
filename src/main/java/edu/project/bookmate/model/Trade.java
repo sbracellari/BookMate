@@ -1,32 +1,48 @@
 package edu.project.bookmate.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.springframework.jdbc.core.RowMapper;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class Trade{
-  private int traderBookID;
-  private int tradeeBookID;
-  private String listerEmail;
-  private String recipientEmail;
-
-    public Trade(int traderBookID, int tradeeBookID, String listerEmail, String recipientEmail){
-        this.traderBookID = traderBookID;
-        this.tradeeBookID = tradeeBookID;
-        this.listerEmail = listerEmail;
-        this.recipientEmail = recipientEmail;
-        }
+  private Book traderBook;
+  private Book tradeeBook;
+  private Student trader;
+  private Student tradee;
 
   public static RowMapper<Trade> mapper =
     (rs, rowNum) -> {
-      Trade trade =
-        new Trade(
-          rs.getint("traderBookID"),
-          rs.getint("tradeeBookID"),
-          rs.getString("listerEmail"),
-          rs.getString("recipientEmail")
+      Trade trade = new Trade();
+        trade.setTraderBook(
+          new Book(
+            rs.getInt("id"),
+            rs.getString("genre"),
+            rs.getString("title"),
+            rs.getString("author"),
+            rs.getString("isbn"),
+            rs.getString("description"))
+        );
+        trade.setTradeeBook(
+          new Book(
+            rs.getInt("id"),
+            rs.getString("genre"),
+            rs.getString("title"),
+            rs.getString("author"),
+            rs.getString("isbn"),
+            rs.getString("description"))
+        );
+        trade.setTrader(
+          new Student(
+            rs.getString("lister_first_name"), 
+            rs.getString("lister_last_name"), 
+            rs.getString("lister_email"))
+        );
+        trade.setTradee(
+          new Student(
+            rs.getString("recipient_first_name"), 
+            rs.getString("recipient_last_name"), 
+            rs.getString("recipient_email"))
         );
       return trade;
-    };
+  };
 }
