@@ -5,6 +5,8 @@ import edu.project.bookmate.model.Auction;
 import edu.project.bookmate.model.Purchase;
 import edu.project.bookmate.model.Trade;
 import edu.project.bookmate.model.Transaction;
+import edu.oakland.soffit.auth.AuthService;
+import edu.oakland.soffit.auth.SoffitAuthException;
 
 import java.util.List;
 
@@ -99,5 +101,7 @@ public class BookMateDB {
 
   public void verifyStudent(String email, String password) throws DataAccessException {
     jdbcTemplate.queryForObject(Constants.VERIFY_STUDENT, new Object[] {email, password}, String.class);
+    // String jws = Jwts.builder().setHeaderParameter("email", "email");
+
   }
 }

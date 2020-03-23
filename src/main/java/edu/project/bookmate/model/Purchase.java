@@ -6,38 +6,31 @@ import org.springframework.jdbc.core.RowMapper;
 
 @Data
 public class Purchase{
-  private int ID;
+  private int Id;
   private double price;
   private Book book;
   private Student lister;
-  private Student recipient;
 
-  public static RowMapper<Purchase> mapper =
+ public static RowMapper<Purchase> mapper =
     (rs, rowNum) -> {
-     Purchase purchase = new Purchase();
-        purchase.setID(rs.getInt("id"));
-        purchase.setPrice(rs.getDouble("price"));
-        purchase.setBook(
-          new Book(
-            rs.getInt("id"),
-            rs.getString("genre"),
-            rs.getString("title"),
-            rs.getString("author"),
-            rs.getString("isbn"),
-            rs.getString("description"))
-        );
+      Purchase purchase = new Purchase();
+        purchase.setId(rs.getInt("purchase_id"));
+        purchase.setPrice(rs.getDouble("purchase_price"));
         purchase.setLister(
           new Student(
-            rs.getString("lister_first_name"), 
-            rs.getString("lister_last_name"), 
-            rs.getString("lister_email"))
+            rs.getString("student_lister_email"), 
+            rs.getString("student_fname"), 
+            rs.getString("student_lname"))
         );
-        purchase.setRecipient(
-          new Student(
-            rs.getString("recipient_first_name"), 
-            rs.getString("recipient_last_name"), 
-            rs.getString("recipient_email"))
+        purchase.setBook(
+          new Book(
+            rs.getInt("book_id"),
+            rs.getString("book_isbn"),
+            rs.getString("book_author"),
+            rs.getString("book_title"),
+            rs.getString("book_genre"),
+            rs.getString("book_desc"))
         );
       return purchase;
-  };
+  }; 
 }

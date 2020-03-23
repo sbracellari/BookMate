@@ -4,44 +4,29 @@ import lombok.Data;
 import org.springframework.jdbc.core.RowMapper;
 
 @Data
-public class Trade{
+public class Trade {
+  public int id;
   private Book traderBook;
-  private Book tradeeBook;
   private Student trader;
-  private Student tradee;
-
+  
   public static RowMapper<Trade> mapper =
     (rs, rowNum) -> {
       Trade trade = new Trade();
-        trade.setTraderBook(
-          new Book(
-            rs.getInt("id"),
-            rs.getString("genre"),
-            rs.getString("title"),
-            rs.getString("author"),
-            rs.getString("isbn"),
-            rs.getString("description"))
-        );
-        trade.setTradeeBook(
-          new Book(
-            rs.getInt("id"),
-            rs.getString("genre"),
-            rs.getString("title"),
-            rs.getString("author"),
-            rs.getString("isbn"),
-            rs.getString("description"))
-        );
+        trade.setId(rs.getInt("trade_id"));
         trade.setTrader(
           new Student(
-            rs.getString("lister_first_name"), 
-            rs.getString("lister_last_name"), 
-            rs.getString("lister_email"))
+            rs.getString("student_lister_email"), 
+            rs.getString("student_fname"), 
+            rs.getString("student_lname"))
         );
-        trade.setTradee(
-          new Student(
-            rs.getString("recipient_first_name"), 
-            rs.getString("recipient_last_name"), 
-            rs.getString("recipient_email"))
+        trade.setTraderBook(
+          new Book(
+            rs.getInt("book_id"),
+            rs.getString("book_isbn"),
+            rs.getString("book_author"),
+            rs.getString("book_title"),
+            rs.getString("book_genre"),
+            rs.getString("book_desc"))
         );
       return trade;
   };

@@ -1,4 +1,9 @@
 package edu.project.bookmate.controller;
+
+import edu.project.bookmate.service.BookMateDB;
+import edu.project.bookmate.model.Transaction;
+
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import edu.oakland.soffit.auth.AuthService;
@@ -12,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -23,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bookmate/v1")
 public class BookMateController {
   protected final Logger log = LoggerFactory.getLogger("bookmate");
-  //@Autowired private BookMateDB service; // instantiate an instance of the service class
+  @Autowired private BookMateDB service; // instantiate an instance of the service class
   @Autowired private AuthService authorizer; // this is from the library we're using to do JWT authentication. Instantiate an instance of the auth service
 
   @ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "Invalid JWT")
@@ -61,29 +67,33 @@ public class BookMateController {
   }
 
   // get all transactions
-  /*@GetMapping("get-transactions")
-  public Map<String, Object> getTransactions(HttpServletRequest request) {
-    Map<String, Object> transactions = new HashMap<>();
+  @GetMapping("get-transactions")
+  public Transaction getTransactions() {
+    return service.getTransactions();
+  }
 
-    transactions.put("Purchases", service.getPurchases()); // getPruchases() would be in the service, returning a List<Purchase>, Purchase is the model 
-    transactions.put("Trades", service.getTrades()); // getTrades() would be in the service, returning a List<Trade>, Trade is the model
-    transactions.put("Auctions", service.getAuctions()); // getAuctions() would be in the service, returning a List<Auction>, auction is the model
+  // get a student's listed books
+  @GetMapping("my-listings")
+  public Transaction getMyListings(HttpServletRequest request) {
+    // String listerEmail = authorizer.getClaimFromJWE(request, "email").asString();
+    String listerEmail = "jkeeling@oakland.edu";
+    return service.getListings(listerEmail);
+  }
 
-    return transactions;
-  }*/
+  // @PostMapping("remove-book/{bookID}") // the thing in the curly brace is a path variable, passed from the front end
 
+  // @PostMapping("list-book/{transaction}/{bookID}")
 
-  /*@PostMapping("remove-book/{bookID}") // the thing in the curly brace is a path variable, passed from the front end
+  // @PostMapping("purchase-book/{bookID}")
 
-  @PostMapping("list-book/{transaction}/{bookID}")
+  // @PostMapping("trade-book/{bookID}")
 
-  @PostMapping("purchase-book/{bookID}")
+  // @PostMapping("bid/{bookID}")
 
-  @PostMapping("trade-book/{bookID}")
+  // @PostMapping("register")
 
-  @PostMapping("bid/{bookID}")
-
-  @PostMapping("register")
-
-  @PostMapping("login")*/
+  @PostMapping("login")
+  public void verifyStudent(String email, String password) {
+    service.verifyStudent(email, password);
+  }
 }  

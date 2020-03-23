@@ -5,33 +5,33 @@ import org.springframework.jdbc.core.RowMapper;
 
 @Data
 public class Book {
-  private String genre;
-  private String title;
+  private int id;
+  private String isbn;
   private String author;
-  private String ISBN;
-  private String description;
-  private int ID;
+  private String title;
+  private String genre = "N/A";
+  private String desc = "N/A";
 
   public Book() {}
 
-  public Book(int ID, String genre, String title, String author, String ISBN, String description) {
-    this.ID = ID;
-    this.genre = genre;
-    this.title = title;
+  public Book(int id, String isbn, String author, String title, String genre, String desc) {
+    this.id = id;
+    this.isbn = isbn;
     this.author = author;
-    this.ISBN = ISBN;
-    this.description = description;
+    this.title = title;
+    this.genre = genre;
+    this.desc = desc;
   }
 
   public static RowMapper<Book> mapper =
     (rs, rowNum) -> {
       Book book = new Book(); 
-        book.setID(rs.getInt("id"));
-        book.setGenre(rs.getString("genre"));
-        book.setTitle(rs.getString("title"));
-        book.setAuthor(rs.getString("author"));
-        book.setISBN(rs.getString("isbn"));
-        book.setDescription(rs.getString("desscription"));
+        book.setId(rs.getInt("book_id"));
+        book.setIsbn(rs.getString("book_isbn"));
+        book.setAuthor(rs.getString("book_author"));
+        book.setTitle(rs.getString("book_title"));
+        book.setGenre(rs.getString("book_genre"));
+        book.setDesc(rs.getString("book_desc"));
       return book;
   };
 }
