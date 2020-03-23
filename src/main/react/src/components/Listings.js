@@ -129,9 +129,6 @@ class Listings extends Component {
                     <Typography className={classes.typography} component="p">
                       ${purchases.price}
                     </Typography>
-                    <Typography component="p">
-                      Type: Purchase
-                    </Typography>
                   </CardContent>
                   <CardActions className={classes.action}>
                     <Button 
@@ -168,9 +165,6 @@ class Listings extends Component {
                       >
                         ${purchases.price}
                       </Typography>
-                      <Typography component="p">
-                        Type: Purchase
-                      </Typography>
                     </CardContent>
                     <CardActions className={classes.action}>
                       <Button size="small" color="primary" onClick={this.handleClose}>
@@ -191,9 +185,6 @@ class Listings extends Component {
                   <CardContent>
                     <Typography gutterBottom component="h2">
                       {trades.listed_book.title}
-                    </Typography>
-                    <Typography component="p">
-                      Type: Trade
                     </Typography>
                   </CardContent>
                   <CardActions className={classes.action}>
@@ -225,9 +216,6 @@ class Listings extends Component {
                       >
                         {trades.listed_book.desc}
                       </Typography>
-                      <Typography component="p">
-                        Type: Trade
-                      </Typography>
                     </CardContent>
                     <CardActions className={classes.action}>
                       <Button size="small" color="primary" onClick={this.handleClose}>
@@ -248,9 +236,6 @@ class Listings extends Component {
                   <CardContent>
                     <Typography gutterBottom component="h2">
                       {auctions.listed_book.title}
-                    </Typography>
-                    <Typography component="p">
-                      Type: Auction
                     </Typography>
                   </CardContent>
                   <CardActions className={classes.action}>
@@ -281,9 +266,6 @@ class Listings extends Component {
                         className={classes.desc}
                       >
                         {auctions.listed_book.desc}
-                      </Typography>
-                      <Typography component="p">
-                        Type: Auction
                       </Typography>
                     </CardContent>
                     <CardActions className={classes.action}>

@@ -10,10 +10,13 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
+import { list_book_for_trade } from '../api/api';
+
 
 const styles = () => ({
   action: {
-    float: 'right'
+    float: 'right',
+    marginBottom: 10
   },
   card: {
     border: '1px solid lightgray', 
@@ -81,15 +84,47 @@ const styles = () => ({
 
 class Trade extends Component {
   state={
-    open_index: -1
+    open_index: -1,
+    open_trade_index: -1,
+    isbn: '',
+    author: '',
+    title: '',
+    genre: '',
+    desc: ''
   }
 
   handleClose = () => {
     this.setState({ open_index: -1 })
   }
 
+  handleTradeClose = () => {
+    this.setState({ open_trade_index: -1 })
+  }
+
+  handleTradeClose = () => {
+    this.setState({ open_trade_index: -1 })
+  }
+
+  onList = () => {
+    list_book_for_trade(
+      this.state.isbn,
+      this.state.author,
+      this.state.title,
+      this.state.genre,
+      this.state.desc
+    )
+  }
+
+  onTrade = () => {
+    
+  }
+
   onView = i => {
     this.setState({ open_index: i })
+  }
+
+  onTradeView = open_i => {
+    this.setState({ open_trade_index: open_i })
   }
 
   render() {
@@ -117,17 +152,40 @@ class Trade extends Component {
                 />
                 <CardContent>
                   <form noValidate autoComplete="off">
-                    <TextField className={classes.field} placeholder="title..." />
-                    <TextField className={classes.field} placeholder="genre..." />
-                    <TextField className={classes.field} placeholder="author..." />
-                    <TextField className={classes.field} placeholder="description..." multiline/>
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({isbn: event.target.value})} 
+                      placeholder="isbn..." 
+                    />
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({author: event.target.value})} 
+                      placeholder="author..." 
+                    />
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({title: event.target.value})}
+                      placeholder="title..." 
+                    />
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({genre: event.target.value})}
+                      placeholder="genre..." 
+                    />
+                    <TextField 
+                      className={classes.field}
+                      multiline 
+                      onChange={(event) => this.setState({desc: event.target.value})}
+                      placeholder="description..." 
+                    />
+                    <Button 
+                      className={classes.action} 
+                      onClick={this.onList}
+                    >
+                      List
+                    </Button>
                   </form>
                 </CardContent>
-                <CardActions className={classes.action}>
-                  <Button>
-                    List
-                  </Button>
-                </CardActions>
               </Card>
           </Grid>
           <Grid 
@@ -157,7 +215,11 @@ class Trade extends Component {
                     >
                       View
                     </Button>
-                    <Button variant="outlined" size="small">
+                    <Button 
+                      variant="outlined" 
+                      size="small"
+                      onClick={() => this.onTradeView(i)}
+                    >
                       Trade
                     </Button>
                   </CardActions>
@@ -187,7 +249,51 @@ class Trade extends Component {
                       <Button size="small" color="primary" onClick={this.handleClose}>
                         Close
                       </Button>
-                      <Button size="small" color="primary">
+                      <Button size="small" color="primary" onClick={() => this.onTradeView(i)}>
+                        Trade
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Dialog>
+                <Dialog onClose={this.handleTradeClose} open={this.state.open_trade_index === i} style={{textAlign: 'center'}}>
+                  <Card className={classes.dialog}>
+                    <CardHeader className={classes.header}/>
+                    <CardContent>
+                      <Typography>Trade a Book?</Typography>
+                      <form noValidate autoComplete="off">
+                        <TextField 
+                          className={classes.field} 
+                          onChange={(event) => this.setState({isbn: event.target.value})} 
+                          placeholder="isbn..." 
+                        />
+                        <TextField 
+                          className={classes.field} 
+                          onChange={(event) => this.setState({author: event.target.value})} 
+                          placeholder="author..." 
+                        />
+                        <TextField 
+                          className={classes.field} 
+                          onChange={(event) => this.setState({title: event.target.value})}
+                          placeholder="title..." 
+                        />
+                        <TextField 
+                          className={classes.field} 
+                          onChange={(event) => this.setState({genre: event.target.value})}
+                          placeholder="genre..." 
+                        />
+                        <TextField 
+                          className={classes.field}
+                          multiline 
+                          onChange={(event) => this.setState({desc: event.target.value})}
+                          placeholder="description..." 
+                        />
+                      </form>
+                    </CardContent>
+                    <CardActions className={classes.action}>
+                      <Button size="small" color="primary" onClick={this.handleTradeClose}>
+                        Close
+                      </Button>
+                      <Button onClick={this.onTrade} size="small" color="primary">
                         Trade
                       </Button>
                     </CardActions>

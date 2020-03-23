@@ -7,13 +7,16 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader'
 import Dialog from '@material-ui/core/Dialog'
 import Grid from '@material-ui/core/Grid'
+import InputAdornment from '@material-ui/core/InputAdornment';
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
+import { list_book_for_purchase } from '../api/api';
 
 const styles = () => ({
   action: {
-    float: 'right'
+    float: 'right',
+    marginBottom: 10
   },
   card: {
     border: '1px solid lightgray', 
@@ -81,7 +84,13 @@ const styles = () => ({
 
 class Purchase extends Component {
   state={
-    open_index: -1
+    open_index: -1,
+    isbn: '',
+    author: '',
+    title: '',
+    genre: '',
+    desc: '',
+    price: ''
   }
 
   handleClose = () => {
@@ -92,10 +101,25 @@ class Purchase extends Component {
     this.setState({ open_index: i })
   }
 
+  onList = () => {
+    list_book_for_purchase(
+      this.state.isbn,
+      this.state.author,
+      this.state.title,
+      this.state.genre,
+      this.state.desc,
+      this.state.price
+    )
+  }
+
+  onPurchase = () => {
+    
+  }
+
   render() {
     const { 
       classes, 
-      purchases 
+      purchases,
     } = this.props
 
     return (
@@ -117,18 +141,48 @@ class Purchase extends Component {
                 />
                 <CardContent>
                   <form noValidate autoComplete="off">
-                    <TextField className={classes.field} placeholder="title..." />
-                    <TextField className={classes.field} placeholder="genre..." />
-                    <TextField className={classes.field} placeholder="author..." />
-                    <TextField className={classes.field} placeholder="description..." multiline/>
-                    <TextField className={classes.field} placeholder="price..." />
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({isbn: event.target.value})} 
+                      placeholder="isbn..." 
+                    />
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({author: event.target.value})} 
+                      placeholder="author..." 
+                    />
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({title: event.target.value})}
+                      placeholder="title..." 
+                    />
+                    <TextField 
+                      className={classes.field} 
+                      onChange={(event) => this.setState({genre: event.target.value})}
+                      placeholder="genre..." 
+                    />
+                    <TextField 
+                      className={classes.field}
+                      multiline 
+                      onChange={(event) => this.setState({desc: event.target.value})}
+                      placeholder="description..." 
+                    />
+                    <TextField 
+                      className={classes.field} 
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      }}
+                      onChange={(event) => this.setState({price: event.target.value})}
+                      placeholder="price..." 
+                      />
+                    <Button 
+                      className={classes.action} 
+                      onClick={this.onList}
+                    >
+                      List
+                    </Button>
                   </form>
                 </CardContent>
-                <CardActions className={classes.action}>
-                  <Button>
-                    List
-                  </Button>
-                </CardActions>
               </Card>
           </Grid>
           <Grid 

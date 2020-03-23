@@ -556,6 +556,56 @@ export const get_listings = async is_demo => {
   }
 }
 
+export const list_book_for_purchase = async (isbn, author, title, genre, desc, price) => {
+  try {
+    fetch(
+      '/bookmate/v1/list-book-for-purchase', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: {
+          isbn: isbn,
+          author: author,
+          title: title,
+          genre: genre,
+          desc: desc,
+          price: price
+        }
+      }
+    )
+  } catch(err) {
+    return err
+  }
+}
+
+export const list_book_for_trade = async (isbn, author, title, genre, desc) => {
+  try {
+    fetch(
+      '/bookmate/v1/list-book-for-trade', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: {
+          isbn: isbn,
+          author: author,
+          title: title,
+          genre: genre,
+          desc: desc
+        }
+      }
+    )
+  } catch(err) {
+    return err
+  }
+}
+
+
 // POST book-buying-site/account
 // BODY: {
 // "username": "jfghfsjgw",
