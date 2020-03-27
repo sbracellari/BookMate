@@ -1,6 +1,7 @@
 package edu.project.bookmate.controller;
 
 import edu.project.bookmate.service.BookMateDB;
+import edu.project.bookmate.model.Student;
 import edu.project.bookmate.model.Transaction;
 
 import java.util.List;
@@ -76,8 +77,8 @@ public class BookMateController {
   @GetMapping("my-listings")
   public Transaction getMyListings(HttpServletRequest request) {
     // String listerEmail = authorizer.getClaimFromJWE(request, "email").asString();
-    String listerEmail = "jkeeling@oakland.edu";
-    return service.getListings(listerEmail);
+    String listerEmail = "mload@oakland.edu";
+  return service.getListings(listerEmail);
   }
 
   // @PostMapping("remove-book/{bookID}") // the thing in the curly brace is a path variable, passed from the front end
@@ -92,8 +93,8 @@ public class BookMateController {
 
   // @PostMapping("register")
 
-  @PostMapping("login")
-  public void verifyStudent(String email, String password) {
-    service.verifyStudent(email, password);
+  @GetMapping("login")
+  public Map<String, String> verifyStudent(@RequestParam(required = true) String email) {
+    return service.verifyStudent(email);
   }
 }  
