@@ -4,14 +4,15 @@ import {
   BrowserRouter as Router,
   Link, 
   Route,
-  Switch
+  Switch,
+  Redirect
 } from "react-router-dom"
 
 import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 
-import { get_transactions, get_listings } from './api/api'
+import { get_transactions, get_listings, login } from './api/api'
 
 import Login from './components/Login'
 import Home from './components/Home'
@@ -50,7 +51,8 @@ class App extends Component {
     auctions: [],
     listed_purchases: [],
     listed_auctions: [],
-    listed_trades: []
+    listed_trades: [],
+    logged_in: true
   }
 
   handleChange = (event, value) => {
@@ -85,20 +87,20 @@ class App extends Component {
       auctions,
       listed_auctions,
       listed_trades,
-      listed_purchases
+      listed_purchases,
+      logged_in
     } = this.state
   
     return (
       <div style={{margin: 0}}>
       <Router>
         <Route 
-          path="/"
-          render={props => props.location.pathname !== '/login' &&
-          props.location.pathname !== '/' && <Appbar />
+          render={props => props.location.pathname !== '/' &&
+          props.location.pathname !== '/home' && <Appbar />
           }
         />
-        <Route exact path="/" component={Home} />
-        <Route path="/login" 
+        <Route path="/home" component={Home} />
+        <Route exact path="/" 
           component={() => 
             <Login 
               TabPanel={TabPanel}
@@ -107,41 +109,47 @@ class App extends Component {
             />
           } 
         />
-        <Route path="/purchase" 
-          component={
-            () =>
-              <Purchase
-                purchases={purchases}
-              />
+        {logged_in ? (
+          <>
+          <Route exact path="/purchase"
+            component={
+              () =>
+                <Purchase
+                  purchases={purchases}
+                />
             } 
           />
           <Route path="/trade" 
-          component={
-            () =>
-              <Trade
-                trades={trades}
-              />
+            component={
+              () =>
+                <Trade
+                  trades={trades}
+                />
             } 
           />
-           <Route path="/auction" 
-          component={
-            () =>
-              <Auction
-                auctions={auctions}
-              />
-            } 
-          />
-        <Route path="/my-listings" 
-          component={
-            () =>
-              <Listings
-                listed_auctions={listed_auctions}
-                listed_trades={listed_trades}
-                listed_purchases={listed_purchases}
-              />
-            } 
-          />
-      </Router>
+          <Route path="/auction" 
+            component={
+              () =>
+                <Auction
+                  auctions={auctions}
+                />
+              } 
+            />
+          <Route path="/my-listings" 
+            component={
+              () =>
+                <Listings
+                  listed_auctions={listed_auctions}
+                  listed_trades={listed_trades}
+                  listed_purchases={listed_purchases}
+                />
+              } 
+            />
+          </>
+          ) : (
+          <Redirect to="/" />
+          )}
+        </Router>
       </div>
     )
   }

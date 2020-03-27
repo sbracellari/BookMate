@@ -481,23 +481,6 @@ export const get_listings = async is_demo => {
       {
         trades: [{
           lister: {
-            first_name: "Andromache",
-            last_name: "Hallet",
-            username: "ahallet",
-            email: "ahallet@oakland.edu"
-          },
-          recipient: "",
-          listed_book: {
-            genre: "Drama",
-            title: "Drama in the 1980s",
-            author: "Eduardo Thomsen",
-            ISBN: "264-2-76-185729-4",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-          },
-          price: "35.00"
-        },
-        {
-          lister: {
             first_name: "Ramsey",
             last_name: "Witz",
             username: "rwitz",
@@ -605,9 +588,164 @@ export const list_book_for_trade = async (isbn, author, title, genre, desc) => {
   }
 }
 
+export const list_book_for_auction = async (isbn, author, title, genre, desc, auction_end_date) => {
+  try {
+    fetch(
+      '/bookmate/v1/list-book-for-auction', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: {
+          isbn: isbn,
+          author: author,
+          title: title,
+          genre: genre,
+          desc: desc,
+          auction_end_date: auction_end_date
+        }
+      }
+    )
+  } catch(err) {
+    return err
+  }
+}
 
-// POST book-buying-site/account
-// BODY: {
-// "username": "jfghfsjgw",
-// "password": "fgslwtaashs"
-// }
+export const register = async (email, password, first_name, last_name) => {
+  try {
+    const response = await fetch(
+      '/bookmate/v1/register', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json'
+        },
+        body: {
+          email: email,
+          password: password,
+          first_name: first_name,
+          last_name: last_name
+        }
+      }
+    )
+    const data = response.ok
+    return data
+  } catch(err) {
+    return err
+  }
+}
+
+export const remove_auction = async (auction_id) => {
+  try {
+    const response = await fetch(
+      '/bookmate/v1/remove-auction', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: {
+          auction_id: auction_id
+        }
+      }
+    )
+    const data = response.ok
+    return data
+  } catch(err) {
+    return err
+  }
+}
+
+export const remove_purchase = async (purchase_id) => {
+  try {
+    const response = await fetch(
+      '/bookmate/v1/remove-purchase', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: {
+          purchase_id: purchase_id
+        }
+      }
+    )
+    const data = response.ok
+    return data
+  } catch(err) {
+    return err
+  }
+}
+
+export const remove_trade = async (trade_id) => {
+  try {
+    const response = await fetch(
+      '/bookmate/v1/remove-trade', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: {
+          trade_id: trade_id
+        }
+      }
+    )
+    const data = response.ok
+    return data
+  } catch(err) {
+    return err
+  }
+}
+
+export const make_bid = async (auction_id, amount) => {
+  try {
+    const response = await fetch(
+      '/bookmate/v1/make-bid', {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: {
+          auction_id: auction_id,
+          amount: amount
+        }
+      }
+    )  
+    const data = response.ok
+    return data
+  } catch(err) {
+    return err
+  }
+}
+
+export const login = async (email) => {
+  try {
+    const response = await fetch(
+      '/bookmate/v1/login', {
+        credentials: 'include',
+        method: 'GET',
+        headers: {
+          Accept: 'application/json'
+        },
+        body: {
+          email: email
+        }
+      }
+    )
+    const data = await response.json()
+    let token = data.token
+    localStorage.setItem("my-token", token)
+
+    return data.password
+  } catch(err) {
+    return err
+  }
+}
