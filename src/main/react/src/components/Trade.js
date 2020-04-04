@@ -1,17 +1,24 @@
 import React, { Component } from 'react'
 
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
+import CloseIcon from '@material-ui/icons/Close'
 import Dialog from '@material-ui/core/Dialog'
+import ErrorPage from './ErrorPage'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import Snackbar from '@material-ui/core/Snackbar'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import { withStyles } from '@material-ui/core/styles'
-import { list_book_for_trade } from '../api/api';
 
+import { Redirect } from 'react-router-dom'
+
+import { list_book_for_trade } from '../api/api'
+
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
   action: {
@@ -19,21 +26,28 @@ const styles = () => ({
     marginBottom: 10
   },
   card: {
-    border: '1px solid lightgray', 
-    borderRadius: 0, 
+    border: '1px solid lightgray',
+    borderRadius: 0,
     boxShadow: 'none',
-    margin: 10, 
-    width: 200
+    margin: 10,
+    width: 250
   },
   cardHeader: {
     borderBottom: '1px solid lightgray'
+  },
+  container: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: 100
   },
   desc: {
     color: '#6c6c6c',
     paddingBottom: 5
   },
   dialog: {
-    backgroundColor: '#ecece9', 
+    backgroundColor: '#ecece9',
     maxWidth: 300
   },
   field: {
@@ -43,9 +57,9 @@ const styles = () => ({
     marginBottom: 100
   },
   header: {
-    backgroundColor: '#2a3e66', 
+    backgroundColor: '#2a3e66',
     borderBottom: '3px solid #6c6c6c',
-    display: 'grid', 
+    display: 'grid',
     height: 30,
     justifyItems: 'center'
   },
@@ -55,50 +69,62 @@ const styles = () => ({
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     height: '100vh',
-    margin: "-10px -35px -10px -10px",
+    margin: '-10px -35px -10px -10px',
     overflow: 'scroll'
   },
+  isbn: {
+    paddingBottom: 10
+  },
   list: {
-    margin: '30px 30px 30px 50px', 
+    margin: '30px 30px 30px 50px',
     width: 300
   },
-  price: {
-    paddingBottom: 20
-  },
   root: {
-    display: 'flex', 
+    display: 'flex',
     justifyContent: 'center',
-    marginTop: 30, 
+    marginTop: 30,
+    textAlign: 'center'
+  },
+  text: {
     textAlign: 'center'
   },
   title: {
     fontSize: 20
   },
   title2: {
-    fontWeight: 'bolder'
+    fontWeight: 'bolder',
+    marginBottom: 0
   },
   typography: {
-    color: '#6c6c6c'
-  }  
+    color: '#6c6c6c',
+    marginBottom: 10
+  }
 })
 
 class Trade extends Component {
-  state={
+  state = {
+    author: '',
+    desc: '',
+    genre: '',
+    isbn: '',
+    listSnackbar: false,
+    list_err: false,
     open_index: -1,
     open_trade_index: -1,
-    isbn: '',
-    author: '',
-    title: '',
-    genre: '',
-    desc: ''
+    price: '',
+    title: ''
   }
 
   handleClose = () => {
     this.setState({ open_index: -1 })
   }
 
-  handleTradeClose = () => {
-    this.setState({ open_trade_index: -1 })
+  handleListSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    this.setState({ listSnackbar: false })
   }
 
   handleTradeClose = () => {
@@ -112,71 +138,144 @@ class Trade extends Component {
       this.state.title,
       this.state.genre,
       this.state.desc
-    )
+    ).then((data) => {
+      this.setState({ 
+        listSnackbar: true,
+        list_err: !data
+      })
+    })
   }
-
-  onTrade = () => {
-    
-  }
-
-  onView = i => {
-    this.setState({ open_index: i })
-  }
-
-  onTradeView = open_i => {
+  
+  onTradeView = (open_i) => {
     this.setState({ open_trade_index: open_i })
   }
 
+  onView = (i) => {
+    this.setState({ open_index: i })
+  }
+
   render() {
-    const { 
-      classes, 
-      trades 
+    const {
+      classes,
+      handleSnackbarClose,
+      logged_in,
+      onTrade,
+      snackbar,
+      trade_err,
+      trades,
     } = this.props
+
+    if (!logged_in) {
+      return <Redirect to='/' />
+    }
 
     return (
       <div className={classes.img}>
         <div className={classes.root}>
+          <Snackbar
+            action={
+              <React.Fragment>
+                <IconButton
+                  aria-label='close'
+                  color='inherit'
+                  onClick={handleSnackbarClose}
+                  size='small'
+                >
+                  <CloseIcon fontSize='small' />
+                </IconButton>
+              </React.Fragment>
+            }
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            open={snackbar}
+            message={
+              trade_err 
+                ? 'Trade unsuccessful. Try again.' 
+                : 'Trade successful.'
+            }
+          />
+          <Snackbar
+            action={
+              <React.Fragment>
+                <IconButton
+                  aria-label='close'
+                  color='inherit'
+                  onClick={this.handleListSnackbarClose}
+                  size='small'
+                >
+                  <CloseIcon fontSize='small' />
+                </IconButton>
+              </React.Fragment>
+            }
+            anchorOrigin={{
+              horizontal: 'left',
+              vertical: 'bottom',
+            }}
+            open={this.state.listSnackbar}
+            autoHideDuration={6000}
+            onClose={this.handleListSnackbarClose}
+            message={
+              this.state.list_err
+                ? 'List unsuccessful. Try again.'
+                : 'List successful.'
+            }
+            
+          />
           <Grid 
-            container
-            direction="row"
-            justify="center"
+            container 
+            direction='row' 
+            justify='center'
           >
             <Grid item xs>
               <Card className={classes.list}>
                 <CardHeader
                   classes={{
-                    title: classes.title
+                    title: classes.title,
                   }}
                   className={classes.cardHeader}
-                  title="List a Book?"
+                  title='List a Book?'
                 />
                 <CardContent>
-                  <form noValidate autoComplete="off">
-                    <TextField 
-                      className={classes.field} 
-                      onChange={(event) => this.setState({isbn: event.target.value})} 
-                      placeholder="isbn..." 
-                    />
-                    <TextField 
-                      className={classes.field} 
-                      onChange={(event) => this.setState({author: event.target.value})} 
-                      placeholder="author..." 
-                    />
-                    <TextField 
-                      className={classes.field} 
-                      onChange={(event) => this.setState({title: event.target.value})}
-                      placeholder="title..." 
-                    />
-                    <TextField 
-                      className={classes.field} 
-                      onChange={(event) => this.setState({genre: event.target.value})}
-                      placeholder="genre..." 
-                    />
-                    <TextField 
+                  <form noValidate autoComplete='off'>
+                    <TextField
                       className={classes.field}
-                      multiline 
-                      onChange={(event) => this.setState({desc: event.target.value})}
-                      placeholder="description..." 
+                      onChange={(event) =>
+                        this.setState({ isbn: event.target.value })
+                      }
+                      placeholder='isbn...'
+                    />
+                    <TextField
+                      className={classes.field}
+                      onChange={(event) =>
+                        this.setState({ author: event.target.value })
+                      }
+                      placeholder='author...'
+                    />
+                    <TextField
+                      className={classes.field}
+                      onChange={(event) =>
+                        this.setState({ title: event.target.value })
+                      }
+                      placeholder='title...'
+                    />
+                    <TextField
+                      className={classes.field}
+                      onChange={(event) =>
+                        this.setState({ genre: event.target.value })
+                      }
+                      placeholder='genre...'
+                    />
+                    <TextField
+                      className={classes.field}
+                      multiline
+                      onChange={(event) =>
+                        this.setState({ desc: event.target.value })
+                      }
+                      placeholder='description...'
                     />
                     <Button 
                       className={classes.action} 
@@ -187,121 +286,172 @@ class Trade extends Component {
                   </form>
                 </CardContent>
               </Card>
-          </Grid>
-          <Grid 
-            className={classes.grid}
-            container
-            direction="row"
-            item
-            justify="center"
-            spacing={6}
-            wrap="wrap"
-            xs={6}
-          >
-            {trades.map((trades, i) => (
-              <>
-                <Card key={i} className={classes.card}>
-                  <CardHeader className={classes.header}/>
-                  <CardContent>
-                    <Typography gutterBottom component="h2">
-                      {trades.listed_book.title}
-                    </Typography>
-                  </CardContent>
-                  <CardActions className={classes.action}>
-                    <Button 
-                      onClick={() => this.onView(i)}
-                      size="small" 
-                      variant="outlined" 
-                    >
-                      View
-                    </Button>
-                    <Button 
-                      variant="outlined" 
-                      size="small"
-                      onClick={() => this.onTradeView(i)}
-                    >
-                      Trade
-                    </Button>
-                  </CardActions>
-                </Card>
-                <Dialog onClose={this.handleClose} open={this.state.open_index === i} style={{textAlign: 'center'}}>
-                  <Card className={classes.dialog}>
-                    <CardHeader className={classes.header}/>
-                    <CardContent>
-                      <Typography 
-                        className={classes.title2} 
-                        component="h2"
-                        gutterBottom 
-                      >
-                        {trades.listed_book.title}
-                      </Typography>
-                      <Typography 
-                        className={classes.desc}
-                      >
-                        {trades.listed_book.desc}
-                      </Typography>
-                      <Typography>
-                        Listed by {trades.lister.first_name} {trades.lister.last_name} {" "}
-                        ({trades.lister.email})
-                      </Typography>
-                    </CardContent>
-                    <CardActions className={classes.action}>
-                      <Button size="small" color="primary" onClick={this.handleClose}>
-                        Close
-                      </Button>
-                      <Button size="small" color="primary" onClick={() => this.onTradeView(i)}>
-                        Trade
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Dialog>
-                <Dialog onClose={this.handleTradeClose} open={this.state.open_trade_index === i} style={{textAlign: 'center'}}>
-                  <Card className={classes.dialog}>
-                    <CardHeader className={classes.header}/>
-                    <CardContent>
-                      <Typography>Trade a Book?</Typography>
-                      <form noValidate autoComplete="off">
-                        <TextField 
-                          className={classes.field} 
-                          onChange={(event) => this.setState({isbn: event.target.value})} 
-                          placeholder="isbn..." 
-                        />
-                        <TextField 
-                          className={classes.field} 
-                          onChange={(event) => this.setState({author: event.target.value})} 
-                          placeholder="author..." 
-                        />
-                        <TextField 
-                          className={classes.field} 
-                          onChange={(event) => this.setState({title: event.target.value})}
-                          placeholder="title..." 
-                        />
-                        <TextField 
-                          className={classes.field} 
-                          onChange={(event) => this.setState({genre: event.target.value})}
-                          placeholder="genre..." 
-                        />
-                        <TextField 
-                          className={classes.field}
-                          multiline 
-                          onChange={(event) => this.setState({desc: event.target.value})}
-                          placeholder="description..." 
-                        />
-                      </form>
-                    </CardContent>
-                    <CardActions className={classes.action}>
-                      <Button size="small" color="primary" onClick={this.handleTradeClose}>
-                        Close
-                      </Button>
-                      <Button onClick={this.onTrade} size="small" color="primary">
-                        Trade
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Dialog>
-              </>
-            ))}
             </Grid>
+            <Grid
+              className={classes.grid}
+              container
+              direction='row'
+              item
+              justify='center'
+              spacing={6}
+              wrap='wrap'
+              xs={6}
+            >
+              {trades.map((trades, i) =>
+                trades.length === 0 ? (
+                  <ErrorPage />
+                ) : (
+                  <>
+                    <Card key={i} className={classes.card}>
+                      <CardHeader className={classes.header} />
+                      <CardContent className={classes.container}>
+                        <Typography
+                          className={classes.title2}
+                          component='h2'
+                          gutterBottom
+                        >
+                          {trades.book.title}
+                        </Typography>
+                        <Typography className={classes.typography}>
+                          {trades.book.author}
+                        </Typography>
+                        <Typography className={classes.isbn}>
+                          ISBN: {trades.book.isbn}
+                        </Typography>
+                      </CardContent>
+                      <CardActions className={classes.action}>
+                        <Button
+                          onClick={() => this.onView(i)}
+                          size='small'
+                          variant='outlined'
+                        >
+                          View
+                        </Button>
+                        <Button
+                          onClick={() => this.onTradeView(i)}
+                          size='small'
+                          variant='outlined'
+                        >
+                          Trade
+                        </Button>
+                      </CardActions>
+                    </Card>
+                    <Dialog
+                      className={classes.text}
+                      onClose={this.handleClose}
+                      open={this.state.open_index === i}
+                    >
+                      <Card className={classes.dialog}>
+                        <CardHeader className={classes.header} />
+                        <CardContent>
+                          <Typography
+                            className={classes.title2}
+                            component='h2'
+                            gutterBottom
+                          >
+                            {trades.book.title}
+                          </Typography>
+                          <Typography className={classes.typography}>
+                            {trades.book.author}
+                          </Typography>
+                          <Typography className={classes.isbn}>
+                            ISBN: {trades.book.isbn}
+                          </Typography>
+                          <Typography className={classes.desc}>
+                            {trades.book.desc}
+                          </Typography>
+                          <Typography>
+                            Listed by {trades.lister.firstName}{' '}
+                            {trades.lister.lastName} ({trades.lister.email})
+                          </Typography>
+                        </CardContent>
+                        <CardActions className={classes.action}>
+                          <Button
+                            color='primary'
+                            onClick={this.handleClose}
+                            size='small'
+                          >
+                            Close
+                          </Button>
+                          <Button
+                            color='primary'
+                            onClick={() => this.onTradeView(i)}
+                            size='small'
+                          >
+                            Trade
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Dialog>
+                    <Dialog
+                      className={classes.text}
+                      onClose={this.handleTradeClose}
+                      open={this.state.open_trade_index === i}
+                    >
+                      <Card className={classes.dialog}>
+                        <CardHeader className={classes.header} />
+                        <CardContent>
+                          <Typography>Trade a Book?</Typography>
+                          <form noValidate autoComplete='off'>
+                            <TextField
+                              className={classes.field}
+                              onChange={(event) =>
+                                this.setState({ isbn: event.target.value })
+                              }
+                              placeholder='isbn...'
+                            />
+                            <TextField
+                              className={classes.field}
+                              onChange={(event) =>
+                                this.setState({ author: event.target.value })
+                              }
+                              placeholder='author...'
+                            />
+                            <TextField
+                              className={classes.field}
+                              onChange={(event) =>
+                                this.setState({ title: event.target.value })
+                              }
+                              placeholder='title...'
+                            />
+                            <TextField
+                              className={classes.field}
+                              onChange={(event) =>
+                                this.setState({ genre: event.target.value })
+                              }
+                              placeholder='genre...'
+                            />
+                            <TextField
+                              className={classes.field}
+                              multiline
+                              onChange={(event) =>
+                                this.setState({ desc: event.target.value })
+                              }
+                              placeholder='description...'
+                            />
+                          </form>
+                        </CardContent>
+                        <CardActions className={classes.action}>
+                          <Button
+                            color='primary'
+                            onClick={this.handleTradeClose}
+                            size='small'
+                          >
+                            Close
+                          </Button>
+                          <Button
+                            color='primary'
+                            onClick={() => onTrade(i)}
+                            size='small'
+                          >
+                            Trade
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Dialog>
+                  </>
+                ))}
+              </Grid>
             <Grid item xs></Grid>
           </Grid>
         </div>

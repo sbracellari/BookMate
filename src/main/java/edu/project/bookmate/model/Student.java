@@ -23,6 +23,12 @@ public class Student {
     this.password = password;
   }
 
+  public Student(String email, String firstName, String lastName) {
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
   public static RowMapper<Student> mapper =
     (rs, rowNum) -> {
      Student student = new Student();

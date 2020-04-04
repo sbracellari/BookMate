@@ -6,21 +6,20 @@ import org.springframework.jdbc.core.RowMapper;
 @Data
 public class Trade {
   public int id;
-  private Book traderBook;
-  private Student trader;
+  private Book book;
+  private Student lister;
   
   public static RowMapper<Trade> mapper =
     (rs, rowNum) -> {
       Trade trade = new Trade();
         trade.setId(rs.getInt("trade_id"));
-        trade.setTrader(
+        trade.setLister(
           new Student(
             rs.getString("student_lister_email"), 
-            rs.getString("student_password"),
             rs.getString("student_fname"), 
             rs.getString("student_lname"))
         );
-        trade.setTraderBook(
+        trade.setBook(
           new Book(
             rs.getInt("book_id"),
             rs.getString("book_isbn"),

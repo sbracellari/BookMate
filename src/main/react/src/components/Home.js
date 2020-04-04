@@ -3,7 +3,10 @@ import React, { Component } from 'react'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+
 import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = () => ({
@@ -46,12 +49,21 @@ const styles = () => ({
     marginLeft: 100,
     maxWidth: 300,
     minWidth: 200
-    }
+  }
 })
 
 class Home extends Component {
   render() {
-    const { classes } = this.props
+    const { 
+      classes, 
+      onLogout, 
+      logged_in, 
+      onListings 
+    } = this.props
+
+    if (!logged_in) {
+      return <Redirect to='/' />
+    }
 
     return (
       <div className={classes.img}>
@@ -62,37 +74,39 @@ class Home extends Component {
             </div>
             <div className={classes.btns}>
               <Button 
-                className={classes.btn}
-                component={Link}
-                to="/purchase"
+                className={classes.btn} 
+                component={Link} 
+                to='/purchase'
               >
                 BUY
               </Button>
               <Button 
-                className={classes.btn}
-                component={Link}
-                to="/trade"
+                className={classes.btn} 
+                component={Link} 
+                to='/trade'
               >
                 TRADE
               </Button>
               <Button 
-                className={classes.btn}
-                component={Link}
-                to="/auction"
+                className={classes.btn} 
+                component={Link} 
+                to='/auction'
               >
                 BID
               </Button>
-              <Button 
+              <Button
                 className={classes.btn}
                 component={Link}
-                to="/my-listings"
+                onClick={onListings}
+                to='/my-listings'
               >
                 MY LISTINGS
               </Button>
-              <Button 
-                className={classes.btn}   
+              <Button
+                className={classes.btn}
                 component={Link}
-                to="/login"           
+                onClick={onLogout}
+                to='/'
               >
                 LOG OUT
               </Button>
