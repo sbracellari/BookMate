@@ -11,6 +11,7 @@ public class Auction {
   private Timestamp end;
   private double initialBid;
   private double currentBid; 
+  private String currentBidder;
   private Book book;
   private Student lister;
 
@@ -25,11 +26,11 @@ public class Auction {
         auction.setLister(
           new Student(
             rs.getString("student_lister_email"),
-            rs.getString("student_password"),
             rs.getString("student_fname"), 
             rs.getString("student_lname"))
             
         );
+        auction.setCurrentBidder(rs.getString("student_current_bidder"));
         auction.setBook(
           new Book(
             rs.getInt("book_id"),

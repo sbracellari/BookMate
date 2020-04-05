@@ -9,6 +9,7 @@ public class Constants {
 	"     AUCTION.AUCTION_END_DATE,                                   " +
 	"     AUCTION.AUCTION_INITIAL_BID,                                " +
 	"     AUCTION.AUCTION_CURRENT_BID,                                " +
+	"     AUCTION.STUDENT_CURRENT_BIDDER,                             " +
 	"     AUCTION.STUDENT_LISTER_EMAIL,                               " +
 	"     STUDENT.STUDENT_FNAME,                                      " +
 	"     STUDENT.STUDENT_LNAME,                                      " +
@@ -66,7 +67,7 @@ public class Constants {
 	"     STUDENT,                                                  " +
 	"     BOOK                                                      " +
     " WHERE                                                         " +
-	"     TRADE.BOOK_TRADER_ID = BOOK.BOOK_ID                       " +
+	"     TRADE.BOOK_ID = BOOK.BOOK_ID                              " +
 	"     AND TRADE.STUDENT_LISTER_EMAIL = STUDENT.STUDENT_EMAIL    " +
     "     AND TRADE.STUDENT_RECIPIENT_EMAIL IS NULL                 " ;
 
@@ -77,6 +78,7 @@ public class Constants {
 	"     AUCTION.AUCTION_END_DATE,                                   " +
 	"     AUCTION.AUCTION_INITIAL_BID,                                " +
 	"     AUCTION.AUCTION_CURRENT_BID,                                " +
+	"     AUCTION.STUDENT_CURRENT_BIDDER,                             " +
 	"     AUCTION.STUDENT_LISTER_EMAIL,                               " +
 	"     STUDENT.STUDENT_FNAME,                                      " +
 	"     STUDENT.STUDENT_LNAME,                                      " +
@@ -93,7 +95,8 @@ public class Constants {
     " WHERE                                                           " +
 	"     AUCTION.BOOK_ID = BOOK.BOOK_ID                              " +
     "     AND AUCTION.STUDENT_LISTER_EMAIL = STUDENT.STUDENT_EMAIL    " +
-    "     AND STUDENT.STUDENT_EMAIL = ?                   " +
+	"     AND STUDENT.STUDENT_EMAIL = ?                               " +
+	"     AND AUCTION.AUCTION_END_DATE >= NOW()                       " +
     "     AND AUCTION.STUDENT_RECIPIENT_EMAIL IS NULL                 " ;
 
   public static final String GET_LISTED_TRADES = 
@@ -113,9 +116,9 @@ public class Constants {
 	"     STUDENT,                                                  " +
 	"     BOOK                                                      " +
     " WHERE                                                         " +
-	"     TRADE.BOOK_TRADER_ID = BOOK.BOOK_ID                       " +
+	"     TRADE.BOOK_ID = BOOK.BOOK_ID                              " +
     "     AND TRADE.STUDENT_LISTER_EMAIL = STUDENT.STUDENT_EMAIL    " +
-    "     AND STUDENT.STUDENT_EMAIL = ?                 " +
+    "     AND STUDENT.STUDENT_EMAIL = ?                             " +
     "     AND TRADE.STUDENT_RECIPIENT_EMAIL IS NULL                 " ;
 
   public static final String GET_LISTED_PURCHASES = 
@@ -138,24 +141,20 @@ public class Constants {
     " WHERE                                                            " +
 	"     PURCHASE.BOOK_ID = BOOK.BOOK_ID                              " +
     "     AND PURCHASE.STUDENT_LISTER_EMAIL = STUDENT.STUDENT_EMAIL    " +
-    "     AND STUDENT.STUDENT_EMAIL = ?                   " +
+    "     AND STUDENT.STUDENT_EMAIL = ?                                " +
     "     AND PURCHASE.STUDENT_RECIPIENT_EMAIL IS NULL                 " ;
 
   public static final String GET_MOST_RECENT_BOOK_ID = 
-    " INSERT               " +
-	"     INTO BOOK        " +
-	"     (BOOK_ISBN,      " +
-	"     BOOK_AUTHOR,     " +
-	"     BOOK_TITLE,      " +
-	"     BOOK_GENRE,      " +
-	"     BOOK_DESC)       " +
-	" VALUES               " +
-	"     (:isbn,          " +
-    "     :author,         " +
-    "     :title,          " +
-    "     :genre,          " +
-	"     :desc)           " +
-	" RETURNING BOOK_ID    " ;
+    " INSERT                 " +
+	"     INTO BOOK          " +
+	"     (BOOK_ISBN,        " +
+	"     BOOK_AUTHOR,       " +
+	"     BOOK_TITLE,        " +
+	"     BOOK_GENRE,        " +
+	"     BOOK_DESC)         " +
+	" VALUES                 " +
+	"     (?, ?, ?, ?, ?)    " +
+	" RETURNING BOOK_ID      " ;
 
   public static final String LIST_BOOK_FOR_PURCHASE = 
     " INSERT                       " +
@@ -164,35 +163,35 @@ public class Constants {
 	"     STUDENT_LISTER_EMAIL,    " +
 	"     BOOK_ID )                " +
 	" VALUES                       " +
-	"     (:price,                 " +
-    "     :listerEmail,            " +
-	"     :bookId)                 " ;
+	"     (?, ?, ?)                " ;
 	
   public static final String LIST_BOOK_FOR_TRADE = 
     " INSERT                        " +
 	"     INTO TRADE                " +
 	"     (STUDENT_LISTER_EMAIL,    " +
-	"     BOOK_TRADER_ID )          " +
+	"     BOOK_ID )                 " +
     " VALUES                        " +
-	"	  (:listerEmail,            " +
-	"     :bookId)                  " ; 
+	"	  (?, ?)                    " ; 
 	
   public static final String LIST_BOOK_FOR_AUCTION = 
-    " INSERT                       " +
-	"     INTO AUCTION             " +
-	"     (AUCTION_INITIAL_BID,    " +
-	"     AUCTION_CURRENT_BID,     " +
-	"     AUCTION_START_DATE,      " +
-	"     AUCTION_END_DATE,        " +
-	"     STUDENT_LISTER_EMAIL,    " +
-	"     BOOK_ID )                " +
-	" VALUES                       " +
-	"     (0,                      " +
-    "     0,                       " +
-    "     NOW(),                   " +
-    "     :end,                    " +
-    "     :listerEmail,            " +
-	"     :bookId)                 " ;
+    " INSERT                        " +
+	"     INTO AUCTION              " +
+	"     (AUCTION_INITIAL_BID,     " +
+	"     AUCTION_CURRENT_BID,      " +
+	"     AUCTION_START_DATE,       " +
+	"     AUCTION_END_DATE,         " +
+	"     STUDENT_LISTER_EMAIL,     " +
+	"     BOOK_ID )                 " +
+	" VALUES                        " +
+	"     (0, 0, NOW(), ?, ?, ?)    " ;
+	
+  public static final String CHECK_STUDENT =
+    " SELECT                   " +
+    "     STUDENT_EMAIL        " +
+    " FROM                     " +
+    "     STUDENT              " +
+    " WHERE                    " + 
+    "     STUDENT_EMAIL = ?    " ;
 	
   public static final String ADD_STUDENT = 
     " INSERT                   " +
@@ -202,10 +201,7 @@ public class Constants {
 	"     STUDENT_FNAME,       " +
 	"     STUDENT_LNAME)       " +
 	" VALUES                   " + 
-	"     (:email,             " +
-    "     :password,           " +
-    "     :firstName,          " +
-    "     :lastName)           " ;
+	"     (?, ?, ?, ?)         " ;
 
   public static final String VERIFY_STUDENT =
     " SELECT                                  " +
@@ -240,23 +236,35 @@ public class Constants {
     "     AND STUDENT_RECIPIENT_EMAIL IS NULL    " ;
 
   public static final String MAKE_BID = 
-    " UPDATE                                                          " +
-    "     AUCTION                                                     " +
-    " SET                                                             " +
-    "     AUCTION_INITIAL_BID =                                       " +
-    "     CASE                                                        " +
-    "         WHEN AUCTION_INITIAL_BID IS NULL THEN :bidAmount        " +
-    "         ELSE AUCTION_INITIAL_BID END,                           " +
-    "     AUCTION_CURRENT_BID =                                       " +
-    "     CASE                                                        " +
-    "         WHEN AUCTION_INITIAL_BID IS NOT NULL THEN :bidAmount    " +
-    "         ELSE AUCTION_CURRENT_BID END                            " +
-    " WHERE                                                           " +
-	"     AUCTION_ID = ?                                              " ;
+    " UPDATE                                                 " +
+    "     AUCTION                                            " +
+	" SET                                                    " +
+	"     STUDENT_CURRENT_BIDDER = ?,                        " +
+    "     AUCTION_INITIAL_BID =                              " +
+    "     CASE                                               " +
+    "         WHEN AUCTION_INITIAL_BID IS NULL THEN ?        " +
+    "         ELSE AUCTION_INITIAL_BID END,                  " +
+    "     AUCTION_CURRENT_BID =                              " +
+    "     CASE                                               " +
+    "         WHEN AUCTION_INITIAL_BID IS NOT NULL THEN ?    " +
+    "         ELSE AUCTION_CURRENT_BID END                   " +
+    " WHERE                                                  " +
+	"     AUCTION_ID = ?                                     " ;
 	
-//   public static final String MAKE_AUCTION = "";
+  public static final String PURCHASE_BOOK = 
+    " UPDATE                              " +
+    "     PURCHASE                        " +
+    " SET                                 " +
+	"     STUDENT_RECIPIENT_EMAIL = ?     " +
+    " WHERE                               " +
+	"     PURCHASE_ID = ?                 " ; 
 
-//   public static final String MAKE_TRADE = "";
-
-//   public static final String MAKE_PURCHASE = "";
+  public static final String TRADE_BOOK = 
+    " UPDATE                             " +
+	"     TRADE                          " +
+    " SET                                " +
+	"     STUDENT_RECIPIENT_EMAIL = ?    " +
+    " WHERE                              " +
+	"     TRADE_ID = ?                   " ; 
+  
 }

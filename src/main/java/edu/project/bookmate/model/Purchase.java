@@ -19,7 +19,6 @@ public class Purchase{
         purchase.setLister(
           new Student(
             rs.getString("student_lister_email"), 
-            rs.getString("student_password"),
             rs.getString("student_fname"), 
             rs.getString("student_lname"))
         );
